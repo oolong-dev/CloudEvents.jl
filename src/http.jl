@@ -14,11 +14,14 @@ function from_http(headers, body)
             ce[k[4:end]] = v
         end
     end
-    ce["data"] = body
 
     # FIXME: `application/json; charset=utf-8` is not handled
     if content_type == "application/cloudevents+json"
         ce = Dict(string(k) => v for (k, v) in pairs(JSON3.read(body)))
+    elseif content_type == "application/json"
+        ce["data"] = JSON3.read(body)
+    else
+        ce["data"] = body
     end
 
     convert(CloudEvent, ce)
