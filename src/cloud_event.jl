@@ -23,19 +23,16 @@ mutable struct CloudEvent{T}
     data::T
 
     function CloudEvent(id, source, specversion, type, datacontenttype, dataschema, subject, time, extensions, data)
-        if source isa String
-            source = URI(source)
-        end
-        if time isa String
-            time = ZonedDateTime(time, "yyyy-mm-ddTHH:MM:SSz")
-        end
-        if dataschema isa String
-            dataschema = URI(dataschema)
-        end
+        specversion == "0.3" || specversion == "1.0" || @error "unknown specversion: $(repr(specversion))"
 
-        specversion == "0.3" || specversion == "1.0" || @error "unknown specversion $specversion"
-
-        new{typeof(data)}(id, source, specversion, type, datacontenttype, dataschema, subject, time, extensions, data)
+        new{typeof(data)}(id,
+            source isa AbstractString ? URI(source) : source,
+            specversion,
+            type, datacontenttype,
+            dataschema isa AbstractString ? URI(dataschema) : dataschema,
+            subject,
+            time isa AbstractString ? ZonedDateTime(time, "yyyy-mm-ddTHH:MM:SSz") : time,
+            extensions, data)
     end
 end
 
