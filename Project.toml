@@ -1,7 +1,7 @@
 name = "CloudEvents"
 uuid = "d3baf920-4533-4796-be79-acb40839d791"
 authors = ["Jun Tian <tianjun.cpp@gmail.com> and contributors"]
-version = "0.1.0"
+version = "0.1.1"
 
 [deps]
 JSON3 = "0f8b85d8-7281-11e9-16c2-39a750bddbf1"
