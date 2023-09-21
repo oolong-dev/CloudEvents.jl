@@ -2,7 +2,7 @@ export from_http, to_http
 
 using JSON3
 
-from_http(headers, body) = from_http(header, body, Any)
+from_http(headers, body) = from_http(headers, body, Any)
 function from_http(headers, body, ::Type{T}) where T
     content_type = "application/cloudevents+json"
 
@@ -18,9 +18,8 @@ function from_http(headers, body, ::Type{T}) where T
 
     # FIXME: `application/json; charset=utf-8` is not handled
     if content_type == "application/cloudevents+json"
-        ce = Dict(string(k) => v for (k, v) in pairs(JSON3.read(body, T)))
+        ce = Dict(string(k) => v for (k, v) in pairs(T === Any ? JSON3.read(body) : JSON3.read(body, T)))
     elseif content_type == "application/json"
-        @show String(body)
         ce["data"] = JSON3.read(body, T)
     else
         ce["data"] = body
